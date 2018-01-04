@@ -8,4 +8,7 @@ export class LeaderService {
   getLeaders(): Leader[]{
     return LEADERS;
   }
+  getFeaturedLeader():Leader{
+    return LEADERS.filter((promo)=>(promo.featured))[0];
+  }
 }
