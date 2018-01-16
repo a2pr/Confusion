@@ -22,8 +22,6 @@ export class DishdetailComponent implements OnInit {
   dishIds:number[];
   prev:number;
   next:number;
-  comment=Comment;
-
 
 formErrors={
   'name':'',
@@ -103,10 +101,15 @@ validationMessages={
   }
 
   onSubmit(){
-    /*this.comment={
-      rating= new Date();
-  }*/
-    console.log(this.comment);
+    const d=new Date().toISOString();
+    let comment=new Comment();
+    comment.rating=this.commentForm.get('rating').value;
+    comment.comment=this.commentForm.get('comment').value;
+    comment.author=this.commentForm.get('name').value;
+
+    comment.date=d;
+    this.dish.comments.push(comment);
+    console.log(this.dish.comments);
     this.commentForm.reset({
       name:'',
       rating:5,

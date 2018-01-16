@@ -41,10 +41,18 @@
   <div fxFlex="40" *ngIf="dish" fxLayout="column" >
     <md-list >
       <h2 mdSubheader>Comments</h2>
-      <p>{{ commentForm.value | json }} {{ commentForm.status | json }} {{comment|json}} </p>
+      <p>{{ commentForm.value | json }} {{ commentForm.status | json }}  </p>
       <md-list-item *ngFor="let comment of dish.comments">
         <p md-line>{{comment.comment}} <br>{{comment.rating}} Stars <br> <b>-- {{comment.author}} {{comment.date |date}} </b></p>
          <p mdLine > </p>
+      </md-list-item>
+      <md-list-item >
+        <md-hint>
+          <span *ngIf="!(commentForm.invalid)">
+              {{commentForm.get('comment').value}} <br>{{commentForm.get('rating').value}}Stars <br> <b>-- {{commentForm.get('name').value}}</b>
+          </span>
+        </md-hint>
+          <p ></p>
       </md-list-item>
    </md-list>
    <md-divider></md-divider>
