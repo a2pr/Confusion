@@ -38,17 +38,57 @@
         </div>
   </div>
 
-  <div fxFlex="40" *ngIf="dish" >
+  <div fxFlex="40" *ngIf="dish" fxLayout="column" >
     <md-list >
       <h2 mdSubheader>Comments</h2>
+      <p>{{ commentForm.value | json }} {{ commentForm.status | json }} {{comment|json}} </p>
       <md-list-item *ngFor="let comment of dish.comments">
         <p md-line>{{comment.comment}} <br>{{comment.rating}} Stars <br> <b>-- {{comment.author}} {{comment.date |date}} </b></p>
          <p mdLine > </p>
       </md-list-item>
    </md-list>
+   <md-divider></md-divider>
+   <md-list-item class="form-size">
+       <form novalidate [formGroup]="commentForm" (ngSubmit)="onSubmit()"> 
+        <p>
+            <md-input-container class="full-width" 
+            dividerColor="{{(formErrors.name)? 'warn':'primary'}} " >
+                <input mdInput formControlName="name" placeholder="name" type="text" required>
+                <md-hint>
+                    <span [hidden]="!(formErrors.name) " >
+                      {{formErrors.name}}</span>
+                  </md-hint>
+              </md-input-container>
+              
+        </p>    
+        <p>
+            <md-slider tickInterval="1" thumbLabel min="1" max="5" step="1" value="5" >
+                <input  formControlName="rating" required type="range">
+              </md-slider>
+          
+        </p>   
+          <p>
+              <md-input-container class="full-width"
+              dividerColor="{{(formErrors.comment)? 'warn':'primary'}} "  >
+                  <textarea mdInput formControlName="comment" placeholder="Your feedback...." cols="30" rows="15"></textarea>
+                  <md-hint>
+                      <span [hidden]="!(formErrors.comment) " >
+                        {{formErrors.comment}}</span>
+                    </md-hint>
+                </md-input-container>
+               
+          </p>  
+            
+          <button md-button type="submit" class="background-primary text-floral-white"
+          [disabled]="commentForm.invalid">Submit</button>
+        </form>
+   </md-list-item>
    <div [hidden]="dish">
     <md-spinner></md-spinner> <h4>Loading..... Please Wait</h4>
   </div>
+  <!-- <div fxFlex="40" class="container" fxLayout="column" >
+     
+  </div> -->
   </div>
-
+  
 </div>
