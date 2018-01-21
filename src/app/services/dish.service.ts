@@ -10,6 +10,7 @@ import 'rxjs/add/operator/delay';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
+
 @Injectable()
 export class DishService {
 
@@ -20,20 +21,24 @@ export class DishService {
     return this.http.get(baseURL+'dishes')
       .map(res=> { return this.ProcessHttpMsgService
         .extractData(res);})
+        .catch(error=>{return this.ProcessHttpMsgService.handleError(error)});
   }
   getDish(id:number):Observable<Dish>{
     return this.http.get(baseURL+'dishes/'+id)
     .map(res=> { return this.ProcessHttpMsgService
-      .extractData(res);});
+      .extractData(res);})
+      .catch(error=>{return this.ProcessHttpMsgService.handleError(error)});
 
 }
   getFeaturedDish():Observable<Dish>{
     return this.http.get(baseURL+'dishes?featured=true')
     .map(res=> { return this.ProcessHttpMsgService
-      .extractData(res)[0];});
+      .extractData(res)[0];})
+      .catch(error=>{return this.ProcessHttpMsgService.handleError(error)});
   }
-  getDishIds(): Observable<number[]>{
+  getDishIds(): Observable<number[]|any >{
     return this.getDishes()
-    .map(dishes=>{return dishes.map(dish=>dish.id)}) ;
+    .map(dishes=>{return dishes.map(dish=>dish.id)})
+      .catch(error=>{ return error; });
   }
 }
