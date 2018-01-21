@@ -19,6 +19,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 export class DishdetailComponent implements OnInit {
   commentForm:FormGroup;
   dish: Dish;
+  dishcopy=null;
   dishIds:number[];
   prev:number;
   next:number;
@@ -56,7 +57,7 @@ validationMessages={
 
     let id= +this.route.params
       .switchMap((params:Params)=> this.dishservice.getDish(+params['id']))
-        .subscribe(dish=> {this.dish = dish; this.setPrevNext(dish.id)},
+        .subscribe(dish=> {this.dish = dish; this.dishcopy=dish; this.setPrevNext(dish.id)},
           errmess=> this.errMess=<any>errmess);
   }
   
@@ -110,7 +111,10 @@ validationMessages={
     comment.author=this.commentForm.get('name').value;
 
     comment.date=d;
-    this.dish.comments.push(comment);
+  
+    this.dishcopy.comments.push(comment);
+    this.dishcopy.save()
+      .subscribe(dish=> this.dish=dish);
     console.log(this.dish.comments);
     this.commentForm.reset({
       name:'',
