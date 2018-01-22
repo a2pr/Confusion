@@ -3,6 +3,7 @@ import { Component, OnInit, Inject} from '@angular/core';
 import {DishService} from '../services/dish.service';
 import {Params,ActivatedRoute} from '@angular/router';
 import {Location} from '@angular/common';
+import {visibility, flyInOut, expand} from '../animations/app.animation';
 
 import {Dish} from '../shared/dish';
 
@@ -14,7 +15,16 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 @Component({
   selector: 'app-dishdetail',
   templateUrl: './dishdetail.component.html',
-  styleUrls: ['./dishdetail.component.scss']
+  styleUrls: ['./dishdetail.component.scss'],
+  host:{
+    '[@flyInOut]':'true',
+    'style':'display:block'
+  },
+  animations:[
+    flyInOut(),
+    visibility(),
+    expand()
+  ]
 })
 export class DishdetailComponent implements OnInit {
   commentForm:FormGroup;
@@ -24,6 +34,7 @@ export class DishdetailComponent implements OnInit {
   prev:number;
   next:number;
   errMess:string;
+  visibility='shown';
 formErrors={
   'name':'',
   'rating':'',
@@ -56,8 +67,8 @@ validationMessages={
       .subscribe(dishIds=> this.dishIds=dishIds);
 
     let id= +this.route.params
-      .switchMap((params:Params)=> this.dishservice.getDish(+params['id']))
-        .subscribe(dish=> {this.dish = dish; this.dishcopy=dish; this.setPrevNext(dish.id)},
+      .switchMap((params:Params)=> {this.visibility='hidden'; return  this.dishservice.getDish(+params['id']); })
+        .subscribe(dish=> {this.dish = dish; this.dishcopy=dish; this.setPrevNext(dish.id); this.visibility='shown';},
           errmess=> this.errMess=<any>errmess);
   }
   
