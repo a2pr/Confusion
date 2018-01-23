@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+
+import {FeedbackService} from '../services/feedback.service';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import { Feedback, ContactType} from '../shared/feedback';
-import {flyInOut} from '../animations/app.animation';
+import {flyInOut,expand, visibility} from '../animations/app.animation';
 @Component({
   selector: 'app-contact',
   templateUrl: './contact.component.html',
@@ -11,7 +13,9 @@ import {flyInOut} from '../animations/app.animation';
     'style':'display:block'
   },
   animations:[
-    flyInOut()
+    flyInOut(),
+    visibility(),
+    expand()
   ]
 })
 export class ContactComponent implements OnInit {
@@ -19,7 +23,11 @@ export class ContactComponent implements OnInit {
   feedbackForm: FormGroup;
   feedback:Feedback;
   contactType= ContactType;
-
+  feedbackcopy=null;
+  visibilityForm='shown';
+  formStatus=true;
+  visibilitySpinner=true;
+  visibilitySubmit='hidden';
 formErrors={
   'firstname':'',
   'lastname':'',
@@ -49,7 +57,9 @@ validationMessages={
   }
 };
 
-  constructor( private fb:FormBuilder) { 
+  constructor(private feedBackService:FeedbackService,
+     private fb:FormBuilder
+    ) { 
     this.createForm();
   }
  
@@ -87,8 +97,21 @@ validationMessages={
     }
   }
   onSubmit(){
-    this.feedback=this.feedbackForm.value;
-    console.log(this.feedback);
+    this.visibilityForm='hidden';
+    this.formStatus=false;
+    this.feedbackcopy=this.feedbackForm.value;
+    console.log(this.feedbackcopy);
+     this.feedBackService.submitFeedback(this.feedbackcopy)
+      .subscribe(feedback=>{
+        this.visibilitySpinner=false;
+        setTimeout(()=>{this.feedback=feedback;
+          this.visibilitySpinner=true;
+          this.visibilitySubmit='shown'},5000)
+        setTimeout(()=>{this.visibilityForm='shown';
+          this.formStatus=true;
+          this.feedback=null;
+          this.visibilitySubmit='hidden'},10000)
+      });
     this.feedbackForm.reset({
       firstname:'',
       lastname:'',
