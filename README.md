@@ -22,6 +22,10 @@ Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.
 
 Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
 
+## End build
+You can find the end product in the json-server folder, where you can deploy the server locally with the command,
+json-server --watch db.json -d 2000
+And open in your browser the http://localhost:3000/ where you can find the page.
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
